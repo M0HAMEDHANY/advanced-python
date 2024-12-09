@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
 import re
+from classes.Account import Account
+from classes.User import User, Gender
 from utils import PlaceholderEntry, create_left_panel
-
-
 class RegistrationPage:
     def __init__(self, root, switch_to_login):
         self.root = root
@@ -51,7 +51,7 @@ class RegistrationPage:
             ("Confirm Password", "Confirm Password"),
         ]
         entries = {}
-
+        
         # Place fields using grid
         for idx, (field, placeholder) in enumerate(reg_fields):
             label = tk.Label(
@@ -139,6 +139,7 @@ class RegistrationPage:
     def validate_registration(self):
         """Validate registration form inputs"""
         # Basic validation example
+
         name = self.entries["Name"].get()
         username = self.entries["Username"].get()
         email = self.entries["Email"].get()
@@ -181,7 +182,17 @@ class RegistrationPage:
             messagebox.showerror("Registration Error", error_message)
         else:
             messagebox.showinfo("Registration", "Registration Successful!")
-
+        user= User(name=name, phone_number=phone,address="Ismailia",gender=Gender.Male,user_id=1)
+        account = Account(username=username, password=password,user_id=1,card_number=123456789,pin=1234,balance=1000.0)
+        print(user.get_name())
+        print(account.get_username())
+        print(account.get_password())
+        print(user.get_contact_info())
+        
+        
+        
+        
+        
     def destroy(self):
         """Destroy the registration frame if it exists"""
         if self.registration_frame:
