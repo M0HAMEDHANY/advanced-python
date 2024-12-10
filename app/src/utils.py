@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from PIL import Image, ImageTk
 
 
 class PlaceholderEntry(ttk.Entry):
@@ -36,7 +37,6 @@ class PlaceholderEntry(ttk.Entry):
 
 def create_left_panel(parent, title, image_path, description):
     """Create a consistent left panel for registration and login pages"""
-    from PIL import Image, ImageTk
 
     # Left Panel (Dashboard Info)
     left_frame = tk.Frame(parent, bg="#1E1F47", width=450)
