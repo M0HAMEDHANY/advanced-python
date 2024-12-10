@@ -37,12 +37,11 @@ class RegistrationPage:
 
         title_label = tk.Label(
             right_frame,
-            text="Create Your Account",
-            fg="#1E1F47",
-            bg="#EEEEEE",
-            font=("Calibri", 18, "bold"),
+            text="Create Account",
+            font=("Helvetica", 16),
+            bg="#EEEEEE"
         )
-        title_label.grid(row=0, column=0, columnspan=2, pady=20)
+        title_label.grid(row=0, column=0, pady=20)
 
         # Registration Fields
         reg_fields = [
@@ -56,21 +55,28 @@ class RegistrationPage:
         entries = {}
         
         # Place fields using grid
-        for idx, (field, placeholder) in enumerate(reg_fields):
+        for idx, (label_text, placeholder) in enumerate(reg_fields):
             label = tk.Label(
                 right_frame,
-                text=field,
-                fg="#1E1F47",
-                bg="#EEEEEE",
+                text=label_text,
                 font=("Calibri", 12),
+                bg="#EEEEEE"
             )
             label.grid(row=idx + 1, column=0, padx=(40, 10), pady=10, sticky="w")
 
-            entry = PlaceholderEntry(
-                right_frame,
-                font=("Calibri", 12),
-                placeholder=placeholder,
-            )
+            if placeholder in ["Password", "Confirm Password"]:
+                entry = PlaceholderEntry(
+                    right_frame,
+                    font=("Calibri", 12),
+                    placeholder=placeholder,
+                    show="*"
+                )
+            else:
+                entry = PlaceholderEntry(
+                    right_frame,
+                    font=("Calibri", 12),
+                    placeholder=placeholder
+                )
 
             entry.grid(row=idx + 1, column=1, padx=(0, 40), pady=10, sticky="ew")
             entries[placeholder] = entry
@@ -83,20 +89,10 @@ class RegistrationPage:
             right_frame,
             text="I agree to the Terms & Conditions",
             variable=agree_var,
-            onvalue=1,
-            offvalue=0,
             bg="#EEEEEE",
-            fg="#1E1F47",
-            font=("Calibri", 10),
+            font=("Calibri", 12)
         )
-        terms_check.grid(
-            row=len(reg_fields) + 1,
-            column=0,
-            columnspan=2,
-            padx=40,
-            pady=10,
-            sticky="w",
-        )
+        terms_check.grid(row=len(reg_fields) + 1, column=0, columnspan=2, pady=10)
 
         # Register Button
         register_button = tk.Button(
@@ -197,3 +193,31 @@ class RegistrationPage:
         """Destroy the registration frame if it exists"""
         if self.registration_frame:
             self.registration_frame.destroy()
+
+class PlaceholderEntry(tk.Entry):
+    def __init__(self, master=None, placeholder="PLACEHOLDER", show=None, **kwargs):
+        super().__init__(master, **kwargs)
+        self.placeholder = placeholder
+        self.show_char = show
+        self.default_show = self.cget('show')
+        self.placeholder_color = 'grey'
+        self.default_fg_color = self.cget("fg")
+        
+        self.bind("<FocusIn>", self._clear_placeholder)
+        self.bind("<FocusOut>", self._add_placeholder)
+        
+        self._add_placeholder()
+
+    def _clear_placeholder(self, event=None):
+        if self.get() == self.placeholder and self.cget("fg") == self.placeholder_color:
+            self.delete(0, tk.END)
+            self.config(fg=self.default_fg_color)
+            if self.show_char:
+                self.config(show=self.show_char)
+
+    def _add_placeholder(self, event=None):
+        if not self.get():
+            self.config(fg=self.placeholder_color)
+            self.insert(0, self.placeholder)
+            if self.show_char:
+                self.config(show=self.default_show)
