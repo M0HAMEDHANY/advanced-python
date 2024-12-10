@@ -4,10 +4,13 @@ import re
 from classes.Account import Account
 from classes.User import User, Gender
 from utils import PlaceholderEntry, create_left_panel
+
+
 class RegistrationPage:
-    def __init__(self, root, switch_to_login):
+    def __init__(self, root, switch_to_login, switch_to_account):
         self.root = root
         self.switch_to_login = switch_to_login
+        self.switch_to_account = switch_to_account
         self.registration_frame = None
         self.entries = {}
         self.agree_var = None
@@ -182,17 +185,14 @@ class RegistrationPage:
             messagebox.showerror("Registration Error", error_message)
         else:
             messagebox.showinfo("Registration", "Registration Successful!")
-        user= User(name=name, phone_number=phone,address="Ismailia",gender=Gender.Male,user_id=1)
-        account = Account(username=username, password=password,user_id=1,card_number=123456789,pin=1234,balance=1000.0)
-        print(user.get_name())
-        print(account.get_username())
-        print(account.get_password())
-        print(user.get_contact_info())
-        
-        
-        
-        
-        
+            user = User(name=name, phone_number=phone, address="Ismailia", gender=Gender.Male, user_id=1)
+            account = Account(username=username, password=password, user_id=1, card_number=123456789, pin=1234, balance=1000.0)
+            
+            # Destroy registration page before switching
+            self.destroy()
+            # Switch to account page
+            self.switch_to_account(user)
+
     def destroy(self):
         """Destroy the registration frame if it exists"""
         if self.registration_frame:
